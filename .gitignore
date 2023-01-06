@@ -1,0 +1,5 @@
+.vscode
+output/
+.DS_Store
+./pixel/configs/
+README
