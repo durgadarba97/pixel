@@ -1,5 +1,5 @@
 import numpy as np
-from pixel.configs import height, width
+from configs import height, width
 from pixel.state import State
 from PIL import Image
 import time

@@ -2,7 +2,7 @@
 parent class to define and mange state.
 '''
 import numpy as np
-from pixel.configs import height, width, gifpath
+from configs import height, width, gifpath
 import random
 import time
 from PIL import Image

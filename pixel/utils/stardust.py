@@ -1,6 +1,6 @@
 import random
 import numpy as np
-from pixel.configs import height, width
+from configs import height, width
 from PIL import Image
 from pixel.state import State
 import math

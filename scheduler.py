@@ -3,7 +3,7 @@ import threading
 import time
 from collections import deque
 from pixel import *
-from pixel.configs import gifpath
+from configs import gifpath
 import subprocess
 import sys
 
@@ -87,7 +87,7 @@ class Scheduler():
             self.displayqueue.appendleft(state_info)
 
         # preprocess the gif to stream file
-        self.preprocess(state_info[0], state_info[1])
+        self.preprocess(state_info[1])
 
 
 
@@ -99,25 +99,23 @@ class Scheduler():
     def kill(self, pid):
         os.system("./bin/kill.sh "+ pid)
 
-    def preprocess(self, gif, name):
-        if(self.test):
-            return
+    def preprocess(self, name):
         scr = "./bin/to_stream.sh"
- 
-        print(os.getcwd())
-        print(os.listdir(os.getcwd()))
-        subprocess.run([scr + " " + gif + " " + name], shell=True)
+        if(self.test):
+            print(scr + " " + name)
+            return 
+        
+        subprocess.run([scr + " " + name], shell=True)
         
         
 
     def display(self, name):
-        print(os.getcwd())
-        print("now displaying : " + name)
+        scr = "./bin/display.sh"
         if(self.test):
+            print(scr + " " + name)
             subprocess.run(["code " + gifpath + name], shell=True)
             return time.time()
-
-        scr = "./bin/display.sh"
+        
         subprocess.run([scr + " " + name], shell=True)
         return time.time()
 
@@ -127,9 +125,8 @@ class Scheduler():
 if(__name__ == "__main__"):
     print(os.getcwd())
     scheduler = Scheduler()
-    if(len(sys.argv) > 1):
-        if(sys.argv[1] == "test"):
-            scheduler.test = 1
+    if(len(sys.argv) > 1 and sys.argv[1] == "test"):
+        scheduler.test = 1
     
     scheduler.main()
 

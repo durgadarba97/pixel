@@ -5,7 +5,7 @@ from spotipy.oauth2 import SpotifyOAuth
 from pixel.state import State
 import requests
 from PIL import Image
-from pixel.configs import height, width, client_id, client_secret, redirect_uri, scope, cache_path
+from configs import height, width, client_id, client_secret, redirect_uri, scope, cache_path
 import os
 
 # a dumb name but i'll get back to it.

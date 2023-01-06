@@ -3,7 +3,7 @@ import random
 import time
 import numpy as np
 from PIL import Image
-from pixel.configs import height, width
+from configs import height, width
 from pixel.state import State
 
 class Wave(State):
