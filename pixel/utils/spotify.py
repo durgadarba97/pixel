@@ -12,7 +12,7 @@ import os
 class Spotify(State):
     def __init__(self):
         self.spotify = SpotifyOAuth(
-            client_id = client_id
+            client_id = client_id,
             client_secret = client_secret,
             redirect_uri = redirect_uri,
             scope = scope,
