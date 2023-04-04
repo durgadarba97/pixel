@@ -7,8 +7,8 @@ import time
 # Game of Life
 class GameOfLife(State):
 
-    def getOutputFilePath(self):
-        return "/home/spliff/PixelBoard/output/gifs/" + self.toString() + ".gif"
+    # def getOutputFilePath(self):
+    #     return "/home/spliff/PixelBoard/output/gifs/" + self.toString() + ".gif"
 
     def update(self):
         new_grid = np.zeros((height, width))
