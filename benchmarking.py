@@ -3,6 +3,8 @@ import random
 import time
 import numpy as np
 from samplebase import SampleBase
+import sys
+import os
 
 
 
@@ -14,7 +16,7 @@ WIDTH = 64
 class Wave(SampleBase):
 
     def __init__(self, *args, **kwargs):
-        self.grid = self.initializeGrid()
+        # grid = self.initializeGrid()
         super(Wave, self).__init__(*args, **kwargs)
 
     def initializeGrid(self):
@@ -24,14 +26,14 @@ class Wave(SampleBase):
                 grid[i, j] = 0.1 + 0.1 * random.random()
         return grid
 
-    def update(self):
-        lastMap = self.grid.copy()
+    def update(self, grid):
+        lastMap = grid.copy()
 
         for i in range(HEIGHT):
             for j in range(WIDTH):
                 lastValue = lastMap[i, j]
 
-                self.grid[i, j] = lastValue * (0.96 + 0.02 * random.random())
+                grid[i, j] = lastValue * (0.96 + 0.02 * random.random())
 
                 if(lastValue <= (0.18 + 0.04 * random.random())):
                     n = 0
@@ -48,30 +50,40 @@ class Wave(SampleBase):
 
                             if nLastValue >= (0.5 + 0.04 * random.random()):
                                 n += 1
-                                self.grid[i, j] += nLastValue * (0.8 + 0.4 * random.random())
+                                grid[i, j] += nLastValue * (0.8 + 0.4 * random.random())
 
                     if(n > 0):
-                        self.grid[i, j] *= 1 / n
+                        grid[i, j] *= 1 / n
 
-                    self.grid[i, j] = min(self.grid[i, j], 1)
+                    grid[i, j] = min(grid[i, j], 1)
             
-    def paint(self):
+    def paint(self, grid):
         color_grid = np.zeros((HEIGHT, WIDTH, 3))
         for i in range(HEIGHT):
             for j in range(WIDTH):
-                r = 255 * pow(self.grid[i, j], 4 + (self.grid[i, j] * 0.5)) * math.cos(self.grid[i, j])
-                g = 255 * pow(self.grid[i, j], 3 + (self.grid[i, j] * 0.5)) * math.sin(self.grid[i, j])
-                b = 255 * pow(self.grid[i, j], 2 + (self.grid[i, j] * 0.5))
+                r = 255 * pow(grid[i, j], 4 + (grid[i, j] * 0.5)) * math.cos(grid[i, j])
+                g = 255 * pow(grid[i, j], 3 + (grid[i, j] * 0.5)) * math.sin(grid[i, j])
+                b = 255 * pow(grid[i, j], 2 + (grid[i, j] * 0.5))
                 color_grid[i, j] = [r, g, b]
 
         return color_grid
     
     def  generateFrames(self):
+        # start time    
+
+        start_time = time.time()
         offset_canvas = self.matrix.CreateFrameCanvas()
+        grid = self.initializeGrid()
+
+        print("Time to initialize grid: "+ str(time.time() - start_time) + "seconds")
 
         while True:
-            self.update()
-            color_grid = self.paint()
+            self.update(grid)
+            print("Time to update grid: "+ str(time.time() - start_time) + "seconds")
+
+            color_grid = self.paint(grid)
+            print("Time to color grid: "+ str(time.time() - start_time) + "seconds")
+
             for i in range(HEIGHT):
                 for j in range(WIDTH):
                     r = int(color_grid[i, j, 0])
@@ -79,9 +91,18 @@ class Wave(SampleBase):
                     b = int(color_grid[i, j, 2])
                     offset_canvas.SetPixel(j, i, r, g, b)
             offset_canvas = self.matrix.SwapOnVSync(offset_canvas)
+            print("Time to swap canvas: "+ str(time.time() - start_time) + "seconds")
     
 
-wave = Wave()
+# Main function
+if __name__ == "__main__":
+    # pass args to wave
+    wave = Wave()
+
+    if (not wave.process()):
+        wave.print_help()
+
+    wave.generateFrames()
 
 # offset_canvas = self.matrix.CreateFrameCanvas()
 
